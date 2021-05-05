@@ -1,0 +1,26 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: minecraft_records_dev
+  username: postgres
+  password: 'password'
+  host: localhost
+  port: 5432
+
+test:
+  <<: *default
+  database: minecraft_records_test
+  username: postgres
+  password: 'password'
+  host: localhost
+  port: 5432
+
+production:
+  <<: *default
+  database: minecraft_records_production
+  username: minecraft_record_user
+  password: <%= ENV['MINECRAFT_RECORD_DATABASE_PASSWORD'] %>
