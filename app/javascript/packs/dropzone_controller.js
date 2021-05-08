@@ -8,8 +8,7 @@ Dropzone.options.trackUploader = {
   parallelUploads: 5,
   addRemoveLinks: true,
   headers: {
-    'Content-Type': 'application/json',
-    'X-CSRF-Token': csrf
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
   },
   init: function() {
       dzClosure = this; // Makes sure that 'this' is understood inside the functions below.
@@ -37,7 +36,6 @@ Dropzone.options.trackUploader = {
         var trackTable = document.getElementById("trackTable");
 
         var track = document.createElement("div")
-        selectedTrack = track.id;
         
         var fileName = document.createElement("p");
         fileName.innerHTML = file.name;
@@ -51,8 +49,14 @@ Dropzone.options.trackUploader = {
         $.ajax({
           type: 'DELETE',
           url: '/track/'+id,
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
           dataType: 'json'
         });
+
+
+
       });
   }
 }
