@@ -33,8 +33,12 @@ class TrackController < ApplicationController
     end
 
     def download
-        @track = Track.new(track_params)
+        puts params[:ids]
+        @tracks = Track.find(params[:ids])
 
+        @tracks.each do |t|
+            puts t.song.filename
+        end
         # Do downloading stuff
     end
 

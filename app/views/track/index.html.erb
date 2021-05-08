@@ -1,3 +1,5 @@
+<%= javascript_pack_tag "dropzone_controller" %>
+
 <h1>Hello World!</h1>
 
 <%= form_with url: "/track", method: :post, model: @track, 
@@ -12,4 +14,4 @@
 
 <div id="trackTable"></div>
 
-<%= javascript_pack_tag "dropzone_controller" %>
+<%= button_tag "Download Resource Pack", type: 'button', onclick: "download()", class: 'btn btn-default' %>

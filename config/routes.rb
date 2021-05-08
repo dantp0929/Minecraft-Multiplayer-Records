@@ -3,9 +3,7 @@ Rails.application.routes.draw do
 
   root "track#index"
 
-  resources :track do
-    member do
-      post :download
-    end
-  end
+  resources :track
+
+  post "/track/download", to: "track#download"
 end
