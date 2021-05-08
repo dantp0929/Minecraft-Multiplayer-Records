@@ -1,0 +1,15 @@
+<h1>Hello World!</h1>
+
+<%= form_with url: "/track", method: :post, model: @track, 
+    class: "dropzone", id: "track-uploader" do |form| %>
+    
+    <div class="dz-default dz-message">
+        <h3>Drop tracks here</h3> or
+        <strong>click</strong> to browse files
+    </div>
+
+<% end %>
+
+<div id="trackTable"></div>
+
+<%= javascript_pack_tag "dropzone_controller" %>
