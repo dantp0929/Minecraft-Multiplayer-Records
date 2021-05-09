@@ -71,8 +71,6 @@ window.download = function() {
     ids.push(parseInt(element.id.substring(5)));
   });
 
-  
-
   $.ajax({
     type: "POST",
     url: "track/download",

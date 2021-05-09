@@ -1,17 +1,38 @@
 <%= javascript_pack_tag "dropzone_controller" %>
 
-<h1>Hello World!</h1>
-
-<%= form_with url: "/track", method: :post, model: @track, 
-    class: "dropzone", id: "track-uploader" do |form| %>
-    
-    <div class="dz-default dz-message">
-        <h3>Drop tracks here</h3> or
-        <strong>click</strong> to browse files
+<nav class="navbar navbar-inverse">
+  <a class="navbar-brand" href="#">
+    <%= image_tag "Music Disk.png", size: "30x30" %>
+    Bootstrap
+  </a>
+</nav>
+  
+<div class="container-fluid text-center">    
+  <div class="row content">
+    <div class="col-sm-2 sidenav">
+      
     </div>
+    <div class="col-sm-8 text-left"> 
 
-<% end %>
+      <%= form_with url: "/track", method: :post, model: @track, 
+        class: "dropzone", id: "track-uploader" do |form| %>
+        <div class="dz-default dz-message">
+          <h3>Drop tracks here</h3> or
+          <strong>click</strong> to browse files
+        </div>
+      <% end %>
 
-<div id="trackTable"></div>
+      <hr>
 
-<%= button_tag "Download Resource Pack", type: 'button', onclick: "download()", class: 'btn btn-default' %>
+      <div id="trackTable"></div>
+      <%= button_tag "Download Resource Pack", type: 'button', onclick: "download()", class: 'btn btn-default' %>
+    </div>
+    <div class="col-sm-2 sidenav">
+      
+    </div>
+  </div>
+</div>
+
+<footer class="container-fluid text-center">
+  <p>Footer Text</p>
+</footer>
