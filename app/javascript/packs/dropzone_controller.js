@@ -33,10 +33,10 @@ Dropzone.options.trackUploader = {
       $(file.previewTemplate).find('.dz-remove').attr('id', response.trackId);
       selectedTrack = response.trackId;
 
-      var trackTable = document.getElementById("trackTable");
+      var trackTable = document.getElementById("track-table");
 
       var track = document.createElement("div")
-      track.className = "trackItem";
+      track.className = "track-item";
       track.id = "track" + selectedTrack;
       
       var fileName = document.createElement("p");
@@ -44,10 +44,13 @@ Dropzone.options.trackUploader = {
 
       track.appendChild(fileName);
       trackTable.appendChild(track);
+
+      document.getElementById("download-btn").disabled = false;
     });
 
     this.on("removedfile", function(file) {
       var id = $(file.previewTemplate).find('.dz-remove').attr('id');
+
       $.ajax({
         type: 'DELETE',
         url: '/track/'+id,
@@ -59,6 +62,10 @@ Dropzone.options.trackUploader = {
 
       var trackRow = document.getElementById("track" + id);
       trackRow.remove();
+
+      if (!document.getElementById("track-table").childElementCount > 0) {
+        document.getElementById("download-btn").disabled = true;
+      }
     });
   }
 }
