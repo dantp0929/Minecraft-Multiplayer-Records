@@ -73,7 +73,7 @@ Dropzone.options.trackUploader = {
 window.download = function() {
   var ids = [];
 
-  tracks = document.getElementsByClassName("trackItem");
+  tracks = document.getElementsByClassName("track-item");
   tracks.forEach(element => {
     ids.push(parseInt(element.id.substring(5)));
   });
