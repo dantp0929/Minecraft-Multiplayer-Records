@@ -9,7 +9,7 @@ class TrackController < ApplicationController
     @track = Track.new(track_params)
 
     if @track.save
-      render json: { message: 'success', trackId: @track.id }, status: 200
+      render json: { message: 'successfully created', trackId: @track.id }, status: 200
     else
       render json: { error: @track.errors.full_messages.join(', ') }, status: 400
     end
@@ -19,9 +19,9 @@ class TrackController < ApplicationController
     @track = Track.new(track_params)
 
     if @track.update
-
+      render json: { message: 'successfully updated', trackId: @track.id }, status: 200
     else
-      render :edit
+      render json: { error: @track.errors.full_messages.join(', ') }, status: 400
     end
   end
 
@@ -43,12 +43,15 @@ class TrackController < ApplicationController
     Track.create_folders(uuid)
 
     @tracks = Track.find(params[:ids])
+
+		# Converts each track into a .ogg mono file.
     @tracks.each do |t|
       new_song = FFMPEG::Movie.new(url_for(t.song))
       options = { audio_channels: 1,
                   audio_sample_rate: new_song.audio_sample_rate }
       new_song.transcode(
-        "tmp/downloads/#{uuid}/multiplayer_records/multiplayer_records_rp/assets/minecraft/sounds/records/#{t.song.filename.base}.ogg", options
+        "tmp/downloads/#{uuid}/multiplayer_records/multiplayer_records_rp/assets/minecraft/sounds/records/#{t.song.filename.base}.ogg",
+				options
       )
     end
 

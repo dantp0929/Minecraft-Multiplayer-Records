@@ -1,5 +1,3 @@
-<%= javascript_pack_tag "dropzone_controller" %>
-
 <div class="navbar bg-dark">
     <div class="nav-items">
       <%= image_tag "Music Disk.png", size: "40x40", alt: "" %>
@@ -19,12 +17,16 @@
 
     <hr>
 
-    <div id="track-table"></div>
+    <div id="track-table">
+      
+    </div>
     <%= button_tag "Download Resource Pack", type: 'button', onclick: "download()", id: "download-btn", class: 'btn btn-default', disabled: true %>
   </div>
 </div>
 <footer class="footer bg-dark">
   <div class="container">
-    <p>This website is not affiliated with Mojang</p>
+    <p>This website is not affiliated with Mojang. Any files uploaded will be deleted from the server after the user leaves the website.</p>
   </div>
 </footer>
+
+<%= javascript_pack_tag "dropzone_controller" %>
