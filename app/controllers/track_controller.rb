@@ -15,10 +15,10 @@ class TrackController < ApplicationController
     end
   end
 
-  def edit
-    @track = Track.new(track_params)
+  def update
+    @track = Track.find(params[:id])
 
-    if @track.update
+    if @track.update(track_params)
       render json: { message: 'successfully updated', trackId: @track.id }, status: 200
     else
       render json: { error: @track.errors.full_messages.join(', ') }, status: 400
@@ -62,6 +62,6 @@ class TrackController < ApplicationController
   private
 
   def track_params
-    params.require(:track).permit(:name, :texture, :song)
+    params.permit(:name, :texture, :song)
   end
 end

@@ -75,11 +75,21 @@
         
       }
 
-      #track-table {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-column-gap: 10px;
-        grid-row-gap: 10px;
+      .track-item {
+        display: flex;
+        align-items: center;
+      }
+
+      .track-item p {
+        flex: 1;
+      }
+      
+      .track-item input {
+        flex: 1;
+      }
+
+      .track-item form {
+        flex: 1;
       }
 
       .dropzone {
