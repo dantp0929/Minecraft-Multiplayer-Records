@@ -18,4 +18,9 @@ class Track < ApplicationRecord
   def self.create_files(uuid) 
 	
 	end
+
+  def formatted_track_name
+    formatted = name.gsub '-', ' '
+    return formatted.parameterize(separator: '_') + ".png"
+  end
 end

@@ -120,24 +120,29 @@ window.download = function() {
   tracks.forEach(element => {
     ids.push(parseInt(element.id.substring(5)));
 
+    // First update each name
     $.ajax({
       type: "PATCH",
       url: "track/" + element.id.substring(5),
-      dataType: 'track',
-      data: { name: element.childNodes[1].value },
+      dataType: 'track[name]',
+      data: { track: {name: element.childNodes[1].value } },
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      complete: function(data) {
+        // After the last update, download the files
+        if (element === tracks[tracks.length-1]) {
+          $.ajax({
+            type: "POST",
+            url: "track/download",
+            dataType: 'track',
+            data: { ids: ids },
+            headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+          });
+        }
       }
     });
-  });
-
-  $.ajax({
-    type: "POST",
-    url: "track/download",
-    dataType: 'track',
-    data: {ids: ids},
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
   });
 }
