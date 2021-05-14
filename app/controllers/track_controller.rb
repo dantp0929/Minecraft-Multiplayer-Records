@@ -49,20 +49,20 @@ class TrackController < ApplicationController
 
 		# Converts each track into a .ogg mono file.
     @tracks.each do |t|
-      if (t)
-        new_song = FFMPEG::Movie.new(url_for(t.song))
-        options = { audio_channels: 1,
-                    audio_sample_rate: new_song.audio_sample_rate }
-        new_song.transcode(
-          "tmp/downloads/#{uuid}/multiplayer_records/multiplayer_records_rp/assets/minecraft/sounds/records/#{t.song.filename.base}.ogg",
-          options
-        )
+      new_song = FFMPEG::Movie.new(url_for(t.song))
+      options = { audio_channels: 1,
+                  audio_sample_rate: new_song.audio_sample_rate }
+      new_song.transcode(
+        "tmp/downloads/#{uuid}/multiplayer_records/multiplayer_records_rp/assets/minecraft/sounds/records/#{t.song.filename.base}.ogg",
+        options
+      )
 
-        File.open("tmp/downloads/#{uuid}/multiplayer_records/multiplayer_records_rp/assets/minecraft/textures/item/#{t.formatted_track_name}", 'wb') do |file|
-          file.write(t.texture.download)
-        end
+      File.open("tmp/downloads/#{uuid}/multiplayer_records/multiplayer_records_rp/assets/minecraft/textures/item/#{t.formatted_track_name}", 'wb') do |file|
+        file.write(t.texture.download)
       end
     end
+
+    Track.create_files(uuid, @tracks)
 
     render json: { message: 'successfully converted', trackIds: params[:ids], uuid: uuid }, status: 200
     # Do downloading stuff
