@@ -9,7 +9,7 @@ class Track < ApplicationRecord
     FileUtils.mkdir_p('tmp/downloads/' + uuid + '/multiplayer_records/multiplayer_records_rp/assets/minecraft/sounds/records')
     FileUtils.mkdir_p('tmp/downloads/' + uuid + '/multiplayer_records/multiplayer_records_rp/assets/minecraft/textures/item')
 
-    FileUtils.mkdir_p('tmp/downloads/' + uuid + '/multiplayer_records/multiplayer_records_dp/data/multiplayer_records_dp/functions/item')
+    FileUtils.mkdir_p('tmp/downloads/' + uuid + '/multiplayer_records/multiplayer_records_dp/data/multiplayer_records_dp/functions')
     FileUtils.mkdir_p('tmp/downloads/' + uuid + '/multiplayer_records/multiplayer_records_dp/data/minecraft/loot_tables/entities')
     FileUtils.mkdir_p('tmp/downloads/' + uuid + '/multiplayer_records/multiplayer_records_dp/data/minecraft/tags/functions')
   end
@@ -67,7 +67,7 @@ scoreboard players add @a[scores={usedDisc=1}] usedDisc 1\n'"
     # Write disc_play.mcfunction
     discPlayMCFUNCTION = ""
     tracks.each do |track|
-      discPlayMCFUNCTION += "execute as @s[scores={heldDisc=#{track.custom_model_id}}] run function multiplayer_records_dp:play_#{track.formatted_track_name}\n"
+      discPlayMCFUNCTION += "execute as @s[scores={heldDisc=#{track.custom_model_data}}] run function multiplayer_records_dp:play_#{track.parameterized_track_name}\n"
     end
     File.open('tmp/downloads/' + uuid + '/multiplayer_records/multiplayer_records_dp/data/multiplayer_records_dp/functions/detect_play_tick.mcfunction', 'w') do |file|
       file.write(discPlayMCFUNCTION)
@@ -84,7 +84,7 @@ execute as @e[type=item, nbt={Item:{id:\"minecraft:music_disc_11\"}}] at @s unle
     # Write disc_stop.mcfunction
     discStopMCFUNCTION = ""
     tracks.each do |track|
-      discStopMCFUNCTION = "execute as @s[nbt={Item:{tag:{CustomModelData:#{track.custom_model_id}}}}] at @s run stopsound @a[distance=..64] record minecraft:music_disc.#{track.formatted_track_name}\n"
+      discStopMCFUNCTION = "execute as @s[nbt={Item:{tag:{CustomModelData:#{track.custom_model_data}}}}] at @s run stopsound @a[distance=..64] record minecraft:music_disc.#{track.parameterized_track_name}\n"
     end
     File.open('tmp/downloads/' + uuid + '/multiplayer_records/multiplayer_records_dp/data/multiplayer_records_dp/functions/disc_stop.mcfunction', 'w') do |file|
       file.write(discStopMCFUNCTION)
@@ -93,7 +93,7 @@ execute as @e[type=item, nbt={Item:{id:\"minecraft:music_disc_11\"}}] at @s unle
     # Write set_disc_track.mcfunction
     setDiscTrackMCFUNCTION = ""
     tracks.each do |track|
-      setDiscTrackMCFUNCTION = "execute as @s[nbt={SelectedItem:{id:"minecraft:music_disc_11", tag:{CustomModelData:#{track.custom_model_id}}}}] run replaceitem entity @s weapon.mainhand minecraft:music_disc_11{CustomModelData:#{track.custom_model_id}, HideFlags:32, display:{Lore:[\"\\\"\\\\u00a77#{track.name}\\\"\"]}}\n"
+      setDiscTrackMCFUNCTION = "execute as @s[nbt={SelectedItem:{id:\"minecraft:music_disc_11\", tag:{CustomModelData:#{track.custom_model_data}}}}] run replaceitem entity @s weapon.mainhand minecraft:music_disc_11{CustomModelData:#{track.custom_model_data}, HideFlags:32, display:{Lore:[\"\\\"\\\\u00a77#{track.name}\\\"\"]}}\n"
     end
     File.open('tmp/downloads/' + uuid + '/multiplayer_records/multiplayer_records_dp/data/multiplayer_records_dp/functions/set_disc_track.mcfunction', 'w') do |file|
       file.write(setDiscTrackMCFUNCTION)
@@ -103,82 +103,154 @@ execute as @e[type=item, nbt={Item:{id:\"minecraft:music_disc_11\"}}] at @s unle
     tracks.each do |track|
       playMCFUNCTION = "execute as @s at @s run title @a[distance=..64] actionbar {\"text\":\"Now Playing: #{track.name}\",\"color\":\"green\"}\n\
 execute as @s at @s run stopsound @a[distance=..64] record minecraft:music_disc.11\n\
-execute as @s at @s run playsound minecraft:music_disc.#{track.formatted_track_name} record @a[distance=..64] ~ ~ ~ 4 1\n"
-      File.open("tmp/downloads/" + uuid + "/multiplayer_records/multiplayer_records_dp/data/multiplayer_records_dp/functions/play_#{track.formatted_track_name}.mcfunction", 'w') do |file|
+execute as @s at @s run playsound minecraft:music_disc.#{track.parameterized_track_name} record @a[distance=..64] ~ ~ ~ 4 1\n"
+      File.open("tmp/downloads/" + uuid + "/multiplayer_records/multiplayer_records_dp/data/multiplayer_records_dp/functions/play_#{track.parameterized_track_name}.mcfunction", 'w') do |file|
         file.write(playMCFUNCTION)
       end
     end
 
-    creeper = open(os.path.join(datapack_name, 'data', 'minecraft', 'loot_tables', 'entities', 'creeper.json'), 'w')
-
-    creeper_mdentries = []
-    creeper_mdentries.append({'type':'minecraft:tag', 
-                              'weight':1, 
-                              'name':'minecraft:creeper_drop_music_discs', 
-                              'expand':True})
-
-    for i, track in enumerate(track_list):
-        i+=1
-        
-        creeper_mdentries.append({'type':'minecraft:item', 
-                                  'weight':1, 
-                                  'name':'minecraft:music_disc_11', 
-                                  'functions':[{
-                                    'function':'minecraft:set_nbt', 
-                                    'tag':'{
-                                      CustomModelData:%d, 
-                                      HideFlags:32, 
-                                      display:{
-                                        Lore:[\"\\\"\\\\u00a77%s\\\"\"]
-                                      }
-                                    }' % (i, track.replace('"', ''))}]})
-    
-    creeper_normentries = [{'type':'minecraft:item',
-                            'functions':[{
-                              'function':'minecraft:set_count', 
-                              'count':{
-                                'min':0.0, 
-                                'max':2.0, 
-                                'type':'minecraft:uniform'
-                              }
-                            }, 
-                            {
-                              'function':'minecraft:looting_enchant', 
-                              'count':{
-                                'min':0.0, 
-                                'max':1.0
-                              }
-                            }], 
-                              'name':'minecraft:gunpowder'}]
-    creeper.write(json.dumps({'type':'minecraft:entity', 
-                              'pools':[{
-                                'rolls':1,
-                                'entries':creeper_normentries
-                              }, 
-                              {'rolls':1, 
-                              'entries':creeper_mdentries, 
-                              'conditions':[{
-                                'condition':'minecraft:entity_properties', 
-                                'predicate':{
-                                  'type':'#minecraft:skeletons'
-                                }, 
-                                'entity':'killer'
-                              }]
-                              }]
-                            }, 
-                            indent=4))
-    creeper.close()
-
     # Write creeper.json
+    creeperMDEntries = []
+    creeperMDEntries.append(:type => "minecraft:tag",
+                            :weight => 1,
+                            :name => "minecraft:creeper_drop_music_discs",
+                            :expand => true)
+    tracks.each do |track|
+      creeperMDEntries.append( 
+                        :type => "minecraft:item",
+                        :weight => 1,
+                        :name => "minecraft:muscic_disc_11",
+                        :functions => 
+                          [:function => "minecraft:set_nbt",
+                            :tag => {
+                              :CustomModelData => track.custom_model_data,
+                              :HideFlags => 32,
+                              :display => {
+                                :Lore => ["\"\\\"\\\\u00a77#{track.name}\\\"\""]
+                              }
+                            }
+                          ])
+    end
+    creeperNormEntries = []
+    creeperNormEntries.append(:type => "minecraft:item",
+                              :functions => [
+                                {
+                                  :function => "minecraft:set_count",
+                                  :count => {
+                                    :min => 0.0,
+                                    :max => 2.0,
+                                    :type => "minecraft:uniform"
+                                  }
+                                },
+                                {
+                                  :function => "minecraft:looting_enchant",
+                                  :count => {
+                                    :min => 0.0,
+                                    :max => 1.0
+                                  }
+                                }
+                              ])
 
+    creeperJSON = {
+      :type => "minecraft:entity",
+      :pools => [
+        {
+          :rolls => 1,
+          :entries => creeperNormEntries
+        },
+        {
+          :rools => 1,
+          :entries => creeperMDEntries,
+          :conditions => [
+            {
+              :condition => "minecraft:entity_properties",
+              :predicate => 
+              {
+                :type => "#minecraft:skeletons"
+              },
+              :entity => "killer"
+            }
+          ]
+        }
+      ]
+    }
+    File.open("tmp/downloads/" + uuid + "/multiplayer_records/multiplayer_records_dp/data/minecraft/loot_tables/entities/creeper.json", 'w') do |file|
+      file.write(JSON.pretty_generate(creeperJSON))
+    end
+
+    # Write rp pack.mcmeta
+    rpPackMCMETA = {
+      :pack => 
+      {
+        :pack_format => 6,
+        :description => "Resourcepack with #{tracks.length} custom songs."
+      }
+    }
+    File.open("tmp/downloads/" + uuid + "/multiplayer_records/multiplayer_records_rp/pack.mcmeta", 'w') do |file|
+      file.write(JSON.pretty_generate(rpPackMCMETA))
+    end
+
+    # Write sounds.json
+    soundsJSON = {}
+    tracks.each do |track|
+      soundsJSON["music_disc.#{track.parameterized_track_name}"] = 
+      {
+        :sounds => [
+          {
+            :name => "records/#{track.parameterized_track_name}",
+            :stream => true
+          }
+        ] 
+      }
+    end
+    File.open("tmp/downloads/" + uuid + "/multiplayer_records/multiplayer_records_rp/assets/minecraft/sounds.json", 'w') do |file|
+      file.write(JSON.pretty_generate(soundsJSON))
+    end
+
+    # Write music_disc_11.json
+    md11Custom = []
+    tracks.each do |track|
+      md11Custom.append({
+        :predicate => {
+          :custom_model_data => track.custom_model_data
+        },
+        :model => "item/music_disc_#{track.parameterized_track_name}"
+      })
+    end
+
+    musicDisc11JSON = {
+      :parent => "item/generated",
+      :textures => {
+        :layer0 => "item/music_disc_11"
+      },
+      :overrides => md11Custom
+    }
+
+    File.open("tmp/downloads/" + uuid + "/multiplayer_records/multiplayer_records_rp/assets/minecraft/models/item/music_disc_11.json", 'w') do |file|
+      file.write(JSON.pretty_generate(musicDisc11JSON))
+    end
+
+    # Write music_disc_*.json
+    tracks.each do |track|
+      File.open("tmp/downloads/" + uuid + "/multiplayer_records/multiplayer_records_rp/assets/minecraft/models/item/music_disc_#{track.parameterized_track_name}.json", 'w') do |file|
+        mdJSON = {
+          :parent => "item/generated",
+          :textures => {
+            :layer0 => "item/music_disc_#{track.parameterized_track_name}"
+          }
+        }
+        file.write(JSON.pretty_generate(mdJSON))
+      end
+    end
   end
 
-  def formatted_track_name
+  def parameterized_track_name
     formatted = name.gsub '-', ' '
-    return formatted.parameterize(separator: '_') + ".png"
+    return formatted.parameterize(separator: '_')
   end
 
-  def custom_model_id
-    return Digest::SHA1.hexdigest(name).to_i(16)
+  def custom_model_data
+    return Digest::SHA1.hexdigest(name).to_i(10)
   end
 end
+  

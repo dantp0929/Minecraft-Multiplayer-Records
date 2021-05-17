@@ -53,24 +53,33 @@ class TrackController < ApplicationController
       options = { audio_channels: 1,
                   audio_sample_rate: new_song.audio_sample_rate }
       new_song.transcode(
-        "tmp/downloads/#{uuid}/multiplayer_records/multiplayer_records_rp/assets/minecraft/sounds/records/#{t.song.filename.base}.ogg",
+        "tmp/downloads/#{uuid}/multiplayer_records/multiplayer_records_rp/assets/minecraft/sounds/records/#{t.parameterized_track_name}.ogg",
         options
       )
 
-      File.open("tmp/downloads/#{uuid}/multiplayer_records/multiplayer_records_rp/assets/minecraft/textures/item/#{t.formatted_track_name}", 'wb') do |file|
+      File.open("tmp/downloads/#{uuid}/multiplayer_records/multiplayer_records_rp/assets/minecraft/textures/item/#{t.parameterized_track_name}.png", 'wb') do |file|
         file.write(t.texture.download)
       end
     end
 
     Track.create_files(uuid, @tracks)
 
+    zipper = ZipFileGenerator.new("tmp/downloads/#{uuid}/multiplayer_records", "tmp/downloads/#{uuid}/multiplayer_records.zip")
+    zipper.write
+
+    puts "SENDING!!!!!!!!"
+    send_file File.absolute_path("tmp/downloads/#{uuid}/multiplayer_records.zip"), 
+              type: "application/zip",
+              dispostion: "attachment",
+              filename: "multiplayer_records.zip"
+    puts "DONE SENDING!!!!!!!!"
+
     render json: { message: 'successfully converted', trackIds: params[:ids], uuid: uuid }, status: 200
-    # Do downloading stuff
   end
 
   private
-
   def track_params
     params.require(:track).permit(:name, :texture, :song)
   end
+
 end
