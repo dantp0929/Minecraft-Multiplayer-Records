@@ -84,7 +84,7 @@ Dropzone.options.trackUploader = {
         }
       });
 
-      document.getElementById("download-btn").disabled = false;
+      document.getElementById("convert-btn").disabled = false;
     });
 
     this.on("removedfile", function(file) {
@@ -103,7 +103,7 @@ Dropzone.options.trackUploader = {
       trackRow.remove();
 
       if (!document.getElementById("track-table").childElementCount > 0) {
-        document.getElementById("download-btn").disabled = true;
+        document.getElementById("convert-btn").disabled = true;
       }
     });
   }
@@ -115,6 +115,7 @@ if (document.getElementById('track-uploader')) {
 
 window.download = function() {
   var ids = [];
+  var uuid = document.getElementById("session-uuid").value
 
   tracks = document.getElementsByClassName("track-item");
   tracks.forEach(element => {
@@ -134,11 +135,14 @@ window.download = function() {
         if (element === tracks[tracks.length-1]) {
           $.ajax({
             type: "POST",
-            url: "track/download",
+            url: "track/convert",
             dataType: 'track',
-            data: { ids: ids },
+            data: { ids: ids, uuid: uuid },
             headers: {
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            complete: function(data) {
+              document.getElementById("download-btn").disabled = false;
             }
           });
         }

@@ -1,9 +1,11 @@
+<input id="session-uuid" type="hidden", value=<%= "#{@uuid}" %>>
+
 <div class="navbar bg-dark">
-    <div class="nav-items">
-      <%= image_tag "Music Disk.png", size: "40x40", alt: "" %>
-      <p>Minecraft Multiplayer Records</p>
-    </div>
+  <div class="nav-items">
+    <%= image_tag "Music Disk.png", size: "40x40", alt: "" %>
+    <p>Minecraft Multiplayer Records</p>
   </div>
+</div>
 
 <div id="wrap">
   <div id="main" class="">
@@ -20,7 +22,10 @@
     <div id="track-table">
       
     </div>
-    <%= button_tag "Download Resource Pack", type: 'button', onclick: "download()", id: "download-btn", class: 'btn btn-default', disabled: true %>
+    <%= button_tag "Convert to a Resource Pack!", type: 'button', onclick: "download()", id: "convert-btn", class: 'btn btn-default', disabled: true %>
+
+    <%= link_to "Download", track_download_path(uuid: @uuid), method: "post", id: "download-btn", class: 'btn btn-default', disabled: true %>
+
   </div>
 </div>
 <footer class="footer bg-dark">

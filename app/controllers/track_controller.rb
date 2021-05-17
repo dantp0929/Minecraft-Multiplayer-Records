@@ -2,6 +2,7 @@
 
 class TrackController < ApplicationController
   def index
+    @uuid = SecureRandom.uuid
     @track = Track.new
   end
 
@@ -38,9 +39,9 @@ class TrackController < ApplicationController
     end
   end
 
-  def download
-    uuid = SecureRandom.uuid
-    Track.create_folders(uuid)
+  def convert
+    @uuid = params[:uuid]
+    Track.create_folders(@uuid)
 
     @tracks = []
     params[:ids].each do |id|
@@ -53,28 +54,25 @@ class TrackController < ApplicationController
       options = { audio_channels: 1,
                   audio_sample_rate: new_song.audio_sample_rate }
       new_song.transcode(
-        "tmp/downloads/#{uuid}/multiplayer_records/multiplayer_records_rp/assets/minecraft/sounds/records/#{t.parameterized_track_name}.ogg",
+        "tmp/downloads/#{@uuid}/multiplayer_records/multiplayer_records_rp/assets/minecraft/sounds/records/#{t.parameterized_track_name}.ogg",
         options
       )
 
-      File.open("tmp/downloads/#{uuid}/multiplayer_records/multiplayer_records_rp/assets/minecraft/textures/item/#{t.parameterized_track_name}.png", 'wb') do |file|
+      File.open("tmp/downloads/#{@uuid}/multiplayer_records/multiplayer_records_rp/assets/minecraft/textures/item/#{t.parameterized_track_name}.png", 'wb') do |file|
         file.write(t.texture.download)
       end
     end
 
-    Track.create_files(uuid, @tracks)
+    Track.create_files(@uuid, @tracks)
 
-    zipper = ZipFileGenerator.new("tmp/downloads/#{uuid}/multiplayer_records", "tmp/downloads/#{uuid}/multiplayer_records.zip")
+    zipper = ZipFileGenerator.new("tmp/downloads/#{@uuid}/multiplayer_records", "tmp/downloads/#{@uuid}/multiplayer_records.zip")
     zipper.write
+    
+    render json: { message: 'successfully converted', trackIds: params[:ids], uuid: @uuid }, status: 200
+  end
 
-    puts "SENDING!!!!!!!!"
-    send_file File.absolute_path("tmp/downloads/#{uuid}/multiplayer_records.zip"), 
-              type: "application/zip",
-              dispostion: "attachment",
-              filename: "multiplayer_records.zip"
-    puts "DONE SENDING!!!!!!!!"
-
-    render json: { message: 'successfully converted', trackIds: params[:ids], uuid: uuid }, status: 200
+  def download
+    send_file "tmp/downloads/#{params[:uuid]}/multiplayer_records.zip", type: 'application/zip', dispostion: 'attachment'
   end
 
   private

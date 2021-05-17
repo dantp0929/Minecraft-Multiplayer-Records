@@ -7,5 +7,6 @@ Rails.application.routes.draw do
 
   resources :track
 
+  post '/track/convert', to: 'track#convert'
   post '/track/download', to: 'track#download'
 end
