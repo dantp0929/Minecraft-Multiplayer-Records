@@ -58,13 +58,14 @@ class TrackController < ApplicationController
         options
       )
 
-      File.open("tmp/downloads/#{@uuid}/multiplayer_records/multiplayer_records_rp/assets/minecraft/textures/item/#{t.parameterized_track_name}.png", 'wb') do |file|
+      File.open("tmp/downloads/#{@uuid}/multiplayer_records/multiplayer_records_rp/assets/minecraft/textures/item/music_disc_#{t.parameterized_track_name}.png", 'wb') do |file|
         file.write(t.texture.download)
       end
     end
 
     Track.create_files(@uuid, @tracks)
 
+    File.delete("tmp/downloads/#{@uuid}/multiplayer_records.zip") if File.exists?("tmp/downloads/#{@uuid}/multiplayer_records.zip")
     zipper = ZipFileGenerator.new("tmp/downloads/#{@uuid}/multiplayer_records", "tmp/downloads/#{@uuid}/multiplayer_records.zip")
     zipper.write
     

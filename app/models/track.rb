@@ -19,7 +19,7 @@ class Track < ApplicationRecord
     # Write pack.mcmeta
     packMCMETA = {
       'pack' => {
-        'pack_format' => 4,
+        'pack_format' => 6,
         'description' => "Datapack with #{tracks.length} custom songs."
       }
     }
@@ -47,7 +47,7 @@ class Track < ApplicationRecord
     # Write setup_load.mcfunction
     setupLoadMCFUNCTION = "scoreboard objectives add usedDisc minecraft.used:minecraft.music_disc_11\n\
 scoreboard objectives add heldDisc dummy\n\
-tellraw @a {\"text\": Multiplayer Records v1.0 by adnaP\", \"color\": \"yellow\"}\n"
+tellraw @a {\"text\": \"Multiplayer Records v1.0 by adnaP\", \"color\": \"yellow\"}\n"
     File.open('tmp/downloads/' + uuid + '/multiplayer_records/multiplayer_records_dp/data/multiplayer_records_dp/functions/setup_load.mcfunction', 'w') do |file|
       file.write(setupLoadMCFUNCTION)
     end
@@ -59,7 +59,7 @@ execute as @a[scores={usedDisc=0},nbt={SelectedItem:{id:\"minecraft:music_disc_1
 execute as @a[scores={usedDisc=2}] run function multiplayer_records_dp:disc_play\n\
 execute as @a run scoreboard players add @s usedDisc 0\n\
 execute as @a[scores={usedDisc=2..}] run scoreboard players set @s usedDisc 0\n\
-scoreboard players add @a[scores={usedDisc=1}] usedDisc 1\n'"
+scoreboard players add @a[scores={usedDisc=1}] usedDisc 1\n"
     File.open('tmp/downloads/' + uuid + '/multiplayer_records/multiplayer_records_dp/data/multiplayer_records_dp/functions/detect_play_tick.mcfunction', 'w') do |file|
       file.write(detectPlayTickMCFUNCTION)
     end
@@ -69,7 +69,7 @@ scoreboard players add @a[scores={usedDisc=1}] usedDisc 1\n'"
     tracks.each do |track|
       discPlayMCFUNCTION += "execute as @s[scores={heldDisc=#{track.custom_model_data}}] run function multiplayer_records_dp:play_#{track.parameterized_track_name}\n"
     end
-    File.open('tmp/downloads/' + uuid + '/multiplayer_records/multiplayer_records_dp/data/multiplayer_records_dp/functions/detect_play_tick.mcfunction', 'w') do |file|
+    File.open('tmp/downloads/' + uuid + '/multiplayer_records/multiplayer_records_dp/data/multiplayer_records_dp/functions/disc_play.mcfunction', 'w') do |file|
       file.write(discPlayMCFUNCTION)
     end
 
@@ -84,7 +84,7 @@ execute as @e[type=item, nbt={Item:{id:\"minecraft:music_disc_11\"}}] at @s unle
     # Write disc_stop.mcfunction
     discStopMCFUNCTION = ""
     tracks.each do |track|
-      discStopMCFUNCTION = "execute as @s[nbt={Item:{tag:{CustomModelData:#{track.custom_model_data}}}}] at @s run stopsound @a[distance=..64] record minecraft:music_disc.#{track.parameterized_track_name}\n"
+      discStopMCFUNCTION += "execute as @s[nbt={Item:{tag:{CustomModelData:#{track.custom_model_data}}}}] at @s run stopsound @a[distance=..64] record minecraft:music_disc.#{track.parameterized_track_name}\n"
     end
     File.open('tmp/downloads/' + uuid + '/multiplayer_records/multiplayer_records_dp/data/multiplayer_records_dp/functions/disc_stop.mcfunction', 'w') do |file|
       file.write(discStopMCFUNCTION)
@@ -93,7 +93,7 @@ execute as @e[type=item, nbt={Item:{id:\"minecraft:music_disc_11\"}}] at @s unle
     # Write set_disc_track.mcfunction
     setDiscTrackMCFUNCTION = ""
     tracks.each do |track|
-      setDiscTrackMCFUNCTION = "execute as @s[nbt={SelectedItem:{id:\"minecraft:music_disc_11\", tag:{CustomModelData:#{track.custom_model_data}}}}] run replaceitem entity @s weapon.mainhand minecraft:music_disc_11{CustomModelData:#{track.custom_model_data}, HideFlags:32, display:{Lore:[\"\\\"\\\\u00a77#{track.name}\\\"\"]}}\n"
+      setDiscTrackMCFUNCTION += "execute as @s[nbt={SelectedItem:{id:\"minecraft:music_disc_11\", tag:{CustomModelData:#{track.custom_model_data}}}}] run replaceitem entity @s weapon.mainhand minecraft:music_disc_11{CustomModelData:#{track.custom_model_data}, display:{Lore:['{\"text\":\"#{track.name}\", \"italic\":false, \"color\":\"gray\"}']}}\n"
     end
     File.open('tmp/downloads/' + uuid + '/multiplayer_records/multiplayer_records_dp/data/multiplayer_records_dp/functions/set_disc_track.mcfunction', 'w') do |file|
       file.write(setDiscTrackMCFUNCTION)
@@ -119,16 +119,10 @@ execute as @s at @s run playsound minecraft:music_disc.#{track.parameterized_tra
       creeperMDEntries.append( 
                         :type => "minecraft:item",
                         :weight => 1,
-                        :name => "minecraft:muscic_disc_11",
+                        :name => "minecraft:music_disc_11",
                         :functions => 
                           [:function => "minecraft:set_nbt",
-                            :tag => {
-                              :CustomModelData => track.custom_model_data,
-                              :HideFlags => 32,
-                              :display => {
-                                :Lore => ["\"\\\"\\\\u00a77#{track.name}\\\"\""]
-                              }
-                            }
+                            :tag => "{CustomModelData:#{track.custom_model_data}, display:{Lore:['{\"text\":\"#{track.name}\", \"italic\":false, \"color\":\"gray\"}']}}"
                           ])
     end
     creeperNormEntries = []
@@ -149,7 +143,8 @@ execute as @s at @s run playsound minecraft:music_disc.#{track.parameterized_tra
                                     :max => 1.0
                                   }
                                 }
-                              ])
+                              ],
+                              :name => "minecraft:gunpowder")
 
     creeperJSON = {
       :type => "minecraft:entity",
@@ -159,7 +154,7 @@ execute as @s at @s run playsound minecraft:music_disc.#{track.parameterized_tra
           :entries => creeperNormEntries
         },
         {
-          :rools => 1,
+          :rolls => 1,
           :entries => creeperMDEntries,
           :conditions => [
             {

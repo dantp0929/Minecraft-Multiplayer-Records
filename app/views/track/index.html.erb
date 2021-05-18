@@ -22,9 +22,12 @@
     <div id="track-table">
       
     </div>
-    <%= button_tag "Convert to a Resource Pack!", type: 'button', onclick: "download()", id: "convert-btn", class: 'btn btn-default', disabled: true %>
 
-    <%= link_to "Download", track_download_path(uuid: @uuid), method: "post", id: "download-btn", class: 'btn btn-default', disabled: true %>
+    <%= button_tag "Convert to a Resource Pack!", type: 'button', onclick: "convert()", id: "convert-btn", class: 'btn btn-default', disabled: true %>
+
+    <div id="download-section", style="display: none;">
+      <%= link_to "Download", track_download_path(uuid: @uuid), method: "post", id: "download-btn", class: 'btn btn-default' %>
+    </div>
 
   </div>
 </div>

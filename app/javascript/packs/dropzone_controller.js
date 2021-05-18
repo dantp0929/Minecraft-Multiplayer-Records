@@ -35,6 +35,7 @@ Dropzone.options.trackUploader = {
 
       var trackName = document.createElement("input");
       trackName.setAttribute("type", "text");
+      trackName.setAttribute("value", file.name.split('.').slice(0, -1).join('.'));
       trackItem.appendChild(trackName);
 
       // Texture Uploader Dropzone Code
@@ -113,7 +114,7 @@ if (document.getElementById('track-uploader')) {
   var trackDropzone = new Dropzone("form#track-uploader");
 }
 
-window.download = function() {
+window.convert = function() {
   var ids = [];
   var uuid = document.getElementById("session-uuid").value
 
@@ -133,20 +134,24 @@ window.download = function() {
       complete: function(data) {
         // After the last update, download the files
         if (element === tracks[tracks.length-1]) {
-          $.ajax({
-            type: "POST",
-            url: "track/convert",
-            dataType: 'track',
-            data: { ids: ids, uuid: uuid },
-            headers: {
-              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            complete: function(data) {
-              document.getElementById("download-btn").disabled = false;
-            }
-          });
+          ajaxConvert(ids, uuid)
         }
       }
     });
+  });
+}
+
+function ajaxConvert(ids, uuid) {
+  $.ajax({
+    type: "POST",
+    url: "track/convert",
+    dataType: 'track',
+    data: { ids: ids, uuid: uuid },
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    complete: function(data) {
+      document.getElementById("download-section").style.display = "block";
+    }
   });
 }
