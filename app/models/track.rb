@@ -93,7 +93,7 @@ execute as @e[type=item, nbt={Item:{id:\"minecraft:music_disc_11\"}}] at @s unle
     # Write set_disc_track.mcfunction
     setDiscTrackMCFUNCTION = ""
     tracks.each do |track|
-      setDiscTrackMCFUNCTION += "execute as @s[nbt={SelectedItem:{id:\"minecraft:music_disc_11\", tag:{CustomModelData:#{track.custom_model_data}}}}] run replaceitem entity @s weapon.mainhand minecraft:music_disc_11{CustomModelData:#{track.custom_model_data}, display:{Lore:['{\"text\":\"#{track.name}\", \"italic\":false, \"color\":\"gray\"}']}}\n"
+      setDiscTrackMCFUNCTION += "execute as @s[nbt={SelectedItem:{id:\"minecraft:music_disc_11\", tag:{CustomModelData:#{track.custom_model_data}}}}] run replaceitem entity @s weapon.mainhand minecraft:music_disc_11{CustomModelData:#{track.custom_model_data}, display:{Lore:['{\"text\":\"#{track.name}\", \"italic\":false, \"color\":\"gray\"}']}, HideFlags:32}\n"
     end
     File.open('tmp/downloads/' + uuid + '/multiplayer_records/multiplayer_records_dp/data/multiplayer_records_dp/functions/set_disc_track.mcfunction', 'w') do |file|
       file.write(setDiscTrackMCFUNCTION)
@@ -122,7 +122,7 @@ execute as @s at @s run playsound minecraft:music_disc.#{track.parameterized_tra
                         :name => "minecraft:music_disc_11",
                         :functions => 
                           [:function => "minecraft:set_nbt",
-                            :tag => "{CustomModelData:#{track.custom_model_data}, display:{Lore:['{\"text\":\"#{track.name}\", \"italic\":false, \"color\":\"gray\"}']}}"
+                            :tag => "{CustomModelData:#{track.custom_model_data}, display:{Lore:['{\"text\":\"#{track.name}\", \"italic\":false, \"color\":\"gray\"}']}, HideFlags:32}"
                           ])
     end
     creeperNormEntries = []
@@ -245,7 +245,7 @@ execute as @s at @s run playsound minecraft:music_disc.#{track.parameterized_tra
   end
 
   def custom_model_data
-    return Digest::SHA1.hexdigest(name).to_i(10)
+    return Digest::SHA1.hexdigest(name).to_i(16) % 2147483645
   end
 end
 

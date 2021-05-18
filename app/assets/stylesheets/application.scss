@@ -13,3 +13,95 @@
  *= require dropzone/dropzone
  */
 
+$nav-height: 75px;
+$footer-height: 150px;
+
+html, body {
+  height: 100%;
+}
+
+#wrap {
+  min-height: 100%;
+}
+
+#main {
+  overflow: auto;
+  padding-top: $nav-height; /* Size of navbar */
+  padding-bottom: $footer-height; /* Size of footer */
+}
+
+.navbar {
+  height: $nav-height;
+  margin-bottom: -$nav-height;
+  position: relative;
+  clear: both;
+  border-radius: 0;
+  display: flex;
+
+  .nav-items {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+  }
+
+  p {
+    font-size: 40px;
+    margin: 0px;
+  }
+}
+
+.footer {
+  height: $footer-height;
+  margin-top: -$footer-height; /* negative value of footer height */
+  position: relative;
+  clear: both;
+  padding-top:20px;
+  background-color: black;
+  color: rgb(245, 245, 245);
+
+  p {
+    font-size: x-small;
+    color: rgb(150, 150, 150)
+  }
+}
+
+
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.bg-dark {
+  background-color: rgb(40, 40, 40);
+  color: rgb(245, 245, 245);
+}
+
+.sideview {
+  
+}
+
+.track-item {
+  display: flex;
+  align-items: center;
+}
+
+.track-item p {
+  flex: 1;
+}
+
+.track-item input {
+  flex: 1;
+}
+
+.track-item form {
+  flex: 1;
+}
+
+.dropzone {
+  margin: 20px;
+  border: 3px dashed rgb(120, 150, 173);
+}
+
+.dz-message {
+  color: rgb(120, 150, 173);
+}

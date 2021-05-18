@@ -9,6 +9,7 @@ Dropzone.options.trackUploader = {
   uploadMultiple: false,
   parallelUploads: 5,
   addRemoveLinks: true,
+  acceptedFiles: "audio/*",
   headers: {
     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
   },
@@ -60,6 +61,7 @@ Dropzone.options.trackUploader = {
         parallelUploads: 5,
         addRemoveLinks: true,
         maxFiles: 1,
+        acceptedFiles: "image/png",
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
