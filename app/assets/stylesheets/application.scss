@@ -13,6 +13,8 @@
  *= require dropzone/dropzone
  */
 
+@import "bootstrap";
+
 $nav-height: 75px;
 $footer-height: 150px;
 
@@ -28,6 +30,10 @@ html, body {
   overflow: auto;
   padding-top: $nav-height; /* Size of navbar */
   padding-bottom: $footer-height; /* Size of footer */
+
+  p, button, form, input, .dropzone{
+    font-size: medium;
+  }
 }
 
 .navbar {
@@ -37,10 +43,13 @@ html, body {
   clear: both;
   border-radius: 0;
   display: flex;
+  justify-content: flex-start;
+  align-content: center;
 
   .nav-items {
     display: flex;
     align-items: center;
+    justify-content: center;
     padding: 10px;
   }
 
@@ -58,17 +67,15 @@ html, body {
   padding-top:20px;
   background-color: black;
   color: rgb(245, 245, 245);
-
-  p {
-    font-size: x-small;
-    color: rgb(150, 150, 150)
-  }
-}
-
-
-.container {
   display: flex;
   justify-content: center;
+  align-items: center;
+
+  p {
+    font-size: small;
+    color: rgb(150, 150, 150);
+    text-align: center;
+  }
 }
 
 .bg-dark {
@@ -76,25 +83,13 @@ html, body {
   color: rgb(245, 245, 245);
 }
 
-.sideview {
-  
-}
-
 .track-item {
   display: flex;
   align-items: center;
-}
 
-.track-item p {
-  flex: 1;
-}
-
-.track-item input {
-  flex: 1;
-}
-
-.track-item form {
-  flex: 1;
+  p, input, form {
+    flex: 1;
+  }
 }
 
 .dropzone {
@@ -104,4 +99,16 @@ html, body {
 
 .dz-message {
   color: rgb(120, 150, 173);
+}
+
+.mx {
+  margin-right: 7rem !important;
+  margin-left: 7rem !important;
+}
+
+@media (min-width: 992px) {
+  .mx {
+    margin-right: auto;
+    margin-left: auto;
+  }
 }

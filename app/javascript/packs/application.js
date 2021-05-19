@@ -6,7 +6,7 @@
 //= require jquery3
 //= require jquery_ujs
 //= require popper
-//= require bootstrap-sprokets
+//= require bootstrap-sprockets
 //= require dropzone
 //= require_tree .
 

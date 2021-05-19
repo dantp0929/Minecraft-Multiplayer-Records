@@ -1,14 +1,14 @@
 <input id="session-uuid" type="hidden", value=<%= "#{@uuid}" %>>
 
 <div class="navbar bg-dark">
-  <div class="nav-items">
+  <div class="nav-items mx">
     <%= image_tag "Music Disk.png", size: "40x40", alt: "" %>
     <p>Minecraft Multiplayer Records</p>
   </div>
 </div>
 
 <div id="wrap">
-  <div id="main" class="mx-5">
+  <div id="main" class="mx">
     <%= form_with url: "/track", method: :post, model: @track, 
       class: "dropzone", id: "track-uploader" do |form| %>
       <div class="dz-default dz-message">

@@ -32,7 +32,7 @@ gem 'bootsnap', '>= 1.4.4', require: false
 
 gem 'sprockets-rails', require: 'sprockets/railtie'
 
-gem 'bootstrap', '~> 5.0.0'
+gem 'bootstrap', '~> 5.0.1'
 
 gem 'jquery-rails'
 
