@@ -12,6 +12,9 @@ class Track < ApplicationRecord
     FileUtils.mkdir_p('tmp/downloads/' + uuid + '/multiplayer_records/multiplayer_records_dp/data/multiplayer_records_dp/functions')
     FileUtils.mkdir_p('tmp/downloads/' + uuid + '/multiplayer_records/multiplayer_records_dp/data/minecraft/loot_tables/entities')
     FileUtils.mkdir_p('tmp/downloads/' + uuid + '/multiplayer_records/multiplayer_records_dp/data/minecraft/tags/functions')
+
+    FileUtils.mkdir_p('tmp/downloads/' + uuid + '/multiplayer_records/multiplayer_records_dp/data/vdv_raycast_music/functions')
+    FileUtils.mkdir_p('tmp/downloads/' + uuid + '/multiplayer_records/multiplayer_records_dp/data/vdv_raycast_music/tags/blocks')
   end
 
   # Creates neccessary files for the datapack
@@ -29,7 +32,8 @@ class Track < ApplicationRecord
 
     # Write load.json
     loadJSON = {
-      'values' => ['multiplayer_records_dp:setup_load']
+      'values' => ['multiplayer_records_dp:setup_load',
+                    'vdv_raycast_music:load']
     }
     File.open('tmp/downloads/' + uuid + '/multiplayer_records/multiplayer_records_dp/data/minecraft/tags/functions/load.json', 'w') do |file|
       file.write(JSON.pretty_generate(loadJSON))
@@ -56,7 +60,7 @@ tellraw @a {\"text\": \"Multiplayer Records v1.0 by adnaP\", \"color\": \"yellow
     detectPlayTickMCFUNCTION = "execute as @a[scores={usedDisc=0}] run scoreboard players set @s heldDisc -1\n\
 execute as @a[scores={usedDisc=0},nbt={Inventory:[{Slot:-106b,id:\"minecraft:music_disc_11\"}]}] store result score @s heldDisc run data get entity @s Inventory[{Slot:-106b}].tag.CustomModelData\n\
 execute as @a[scores={usedDisc=0},nbt={SelectedItem:{id:\"minecraft:music_disc_11\"}}] store result score @s heldDisc run data get entity @s SelectedItem.tag.CustomModelData\n\
-execute as @a[scores={usedDisc=2}] run function multiplayer_records_dp:disc_play\n\
+execute as @a[scores={usedDisc=2}] at @s anchored eyes positioned ^ ^ ^ anchored feet run function vdv_raycast_music:start_ray\n\
 execute as @a run scoreboard players add @s usedDisc 0\n\
 execute as @a[scores={usedDisc=2..}] run scoreboard players set @s usedDisc 0\n\
 scoreboard players add @a[scores={usedDisc=1}] usedDisc 1\n"
@@ -103,7 +107,11 @@ execute as @e[type=item, nbt={Item:{id:\"minecraft:music_disc_11\"}}] at @s unle
     tracks.each do |track|
       playMCFUNCTION = "execute as @s at @s run title @a[distance=..64] actionbar {\"text\":\"Now Playing: #{track.name}\",\"color\":\"green\"}\n\
 execute as @s at @s run stopsound @a[distance=..64] record minecraft:music_disc.11\n\
-execute as @s at @s run playsound minecraft:music_disc.#{track.parameterized_track_name} record @a[distance=..64] ~ ~ ~ 4 1\n"
+execute if score #distance vdvcastmusictemp matches 0..10 as @s at @s run playsound minecraft:music_disc.#{track.parameterized_track_name} record @a[distance=..64] ^ ^ ^1 4 1
+execute if score #distance vdvcastmusictemp matches 11..20 as @s at @s run playsound minecraft:music_disc.#{track.parameterized_track_name} record @a[distance=..64] ^ ^ ^2 4 1
+execute if score #distance vdvcastmusictemp matches 21..30 as @s at @s run playsound minecraft:music_disc.#{track.parameterized_track_name} record @a[distance=..64] ^ ^ ^3 4 1
+execute if score #distance vdvcastmusictemp matches 31..40 as @s at @s run playsound minecraft:music_disc.#{track.parameterized_track_name} record @a[distance=..64] ^ ^ ^4 4 1
+execute if score #distance vdvcastmusictemp matches 41.. as @s at @s run playsound minecraft:music_disc.#{track.parameterized_track_name} record @a[distance=..64] ^ ^ ^5 4 1"
       File.open("tmp/downloads/" + uuid + "/multiplayer_records/multiplayer_records_dp/data/multiplayer_records_dp/functions/play_#{track.parameterized_track_name}.mcfunction", 'w') do |file|
         file.write(playMCFUNCTION)
       end
@@ -236,6 +244,47 @@ execute as @s at @s run playsound minecraft:music_disc.#{track.parameterized_tra
         }
         file.write(JSON.pretty_generate(mdJSON))
       end
+    end
+
+    # Wrinting vdv_raycast_music
+    # Write hit_block.mcfunction
+    hitBlockMCFUNCTION = "scoreboard players set #hit vdvcastmusictemp 1\n\
+execute as @a[scores={usedDisc=2}] run function multiplayer_records_dp:disc_play\n"
+    File.open("tmp/downloads/" + uuid + "/multiplayer_records/multiplayer_records_dp/data/vdv_raycast_music/functions/hit_block.mcfunction", "w") do |file|
+      file.write(hitBlockMCFUNCTION)
+    end
+
+    # Write load.mcfunction
+    loadMCFUNCTION = "scoreboard objectives add vdvcastmusictemp dummy\n"
+    File.open("tmp/downloads/" + uuid + "/multiplayer_records/multiplayer_records_dp/data/vdv_raycast_music/functions/load.mcfunction", "w") do |file|
+      file.write(loadMCFUNCTION)
+    end
+
+    # Write ray.mcfunction
+    rayMCFUNCTION = "execute if block ~ ~ ~ #vdv_raycast_music:blocks run function vdv_raycast_music:hit_block\n\
+scoreboard players add #distance vdvcastmusictemp 1\n\
+execute if score #hit vdvcastmusictemp matches 0 if score #distance vdvcastmusictemp matches ..60 positioned ^ ^ ^0.1 run function vdv_raycast_music:ray\n"
+    File.open("tmp/downloads/" + uuid + "/multiplayer_records/multiplayer_records_dp/data/vdv_raycast_music/functions/ray.mcfunction", "w") do |file|
+      file.write(rayMCFUNCTION)
+    end
+
+    # Write start_ray.mcfunction
+    startRayMCFUNCTION = "tag @s add vdvraymusic\n\
+scoreboard players set #hit vdvcastmusictemp 0\n\
+scoreboard players set #distance vdvcastmusictemp 0\n\
+function vdv_raycast_music:ray\n\
+tag @s remove vdvraymusic\n"
+    File.open("tmp/downloads/" + uuid + "/multiplayer_records/multiplayer_records_dp/data/vdv_raycast_music/functions/start_ray.mcfunction", "w") do |file|
+      file.write(startRayMCFUNCTION)
+    end
+
+    # Write blocks.json
+    blocksJSON = {
+      :replace => false,
+      :values => ["minecraft:jukebox"]
+    }
+    File.open("tmp/downloads/" + uuid + "/multiplayer_records/multiplayer_records_dp/data/vdv_raycast_music/tags/blocks/blocks.json", "w") do |file|
+      file.write(JSON.pretty_generate(blocksJSON))
     end
   end
 
