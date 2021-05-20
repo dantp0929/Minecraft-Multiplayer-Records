@@ -1,14 +1,16 @@
 <input id="session-uuid" type="hidden", value=<%= "#{@uuid}" %>>
 
 <div class="navbar bg-dark">
-  <div class="nav-items mx">
+  <div class="nav-items container">
     <%= image_tag "Music Disk.png", size: "40x40", alt: "" %>
-    <p>Minecraft Multiplayer Records</p>
+    <h1>Minecraft Multiplayer Records</h1>
   </div>
 </div>
 
 <div id="wrap">
-  <div id="main" class="mx">
+  <div id="main" class="container">
+    <h1 class="display-1">Upload Tracks</h1>
+    <p class="lead">Only audio files are accepted</p>
     <%= form_with url: "/track", method: :post, model: @track, 
       class: "dropzone", id: "track-uploader" do |form| %>
       <div class="dz-default dz-message">
@@ -18,15 +20,20 @@
     <% end %>
 
     <hr>
-
+    <h1 class="display-1">Edit and Convert</h1>
+    <div class="track-table-headers">
+      <p class="lead file-name">File Name</p>
+      <p class="lead display-name">Display Name</p>
+      <p class="lead texture">Texture</p>
+    </div>
     <div id="track-table">
       
     </div>
 
-    <%= button_tag "Convert to a Resource Pack!", type: 'button', onclick: "convert()", id: "convert-btn", class: 'btn btn-default', disabled: true %>
+    <%= button_tag "Convert to a Resource Pack!", type: 'button', onclick: "convert()", id: "convert-btn", class: 'btn btn-outline-primary btn-sm', disabled: true %>
 
     <div id="download-section", style="display: none;">
-      <%= link_to "Download", track_download_path(uuid: @uuid), method: "post", id: "download-btn", class: 'btn btn-default' %>
+      <%= link_to "Download", track_download_path(uuid: @uuid), method: "post", id: "download-btn", class: 'btn btn-outline-primary btn-lg' %>
     </div>
 
   </div>

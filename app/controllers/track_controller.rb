@@ -39,6 +39,15 @@ class TrackController < ApplicationController
     end
   end
 
+  def destroy_many
+    params[:ids].each do |id|
+      track = Track.find(id)
+      track.song.purge_later
+      track.texture.purge_later
+      track.destroy
+    end
+  end
+
   def convert
     @uuid = params[:uuid]
     Track.create_folders(@uuid)

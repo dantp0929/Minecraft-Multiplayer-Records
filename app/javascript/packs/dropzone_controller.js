@@ -30,14 +30,23 @@ Dropzone.options.trackUploader = {
       trackItem.id = "track" + selectedTrack;
       trackTable.appendChild(trackItem);
       
+      var div1 = document.createElement("div");
+      div1.className = "file-name-container";
+      var div2 = document.createElement("div");
+      div2.className = "track-name-container";
+      var div3 = document.createElement("div");
+      div3.className = "texture-uploader-container";
+
       var fileName = document.createElement("p");
       fileName.innerHTML = file.name;
-      trackItem.appendChild(fileName);
+      div1.appendChild(fileName);
+      trackItem.appendChild(div1);
 
       var trackName = document.createElement("input");
       trackName.setAttribute("type", "text");
       trackName.setAttribute("value", file.name.split('.').slice(0, -1).join('.'));
-      trackItem.appendChild(trackName);
+      div2.appendChild(trackName);
+      trackItem.appendChild(div2);
 
       // Texture Uploader Dropzone Code
       var textureUploader = document.createElement("form");
@@ -45,7 +54,8 @@ Dropzone.options.trackUploader = {
       textureUploader.className = "dropzone";
       textureUploader.id = "texture-uploader" + selectedTrack;
       textureUploader.setAttribute("method", "patch");
-      trackItem.appendChild(textureUploader);
+      div3.appendChild(textureUploader);
+      trackItem.appendChild(div3);
 
       var textureUploaderMessage = document.createElement("div");
       textureUploaderMessage.className = "dz-default dz-message";
@@ -105,8 +115,9 @@ Dropzone.options.trackUploader = {
       var trackRow = document.getElementById("track" + id);
       trackRow.remove();
 
-      if (!document.getElementById("track-table").childElementCount > 0) {
+      if (!document.getElementById("track-table").childElementCount <= 1) {
         document.getElementById("convert-btn").disabled = true;
+        document.getElementById("download-section").style.display = "hidden";
       }
     });
   }
@@ -157,3 +168,7 @@ function ajaxConvert(ids, uuid) {
     }
   });
 }
+
+$(window).on('unload', function() {
+  var fd = new FormData();
+});
