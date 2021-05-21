@@ -203,3 +203,14 @@ function disableAll() {
     Dropzone.forElement(element).disable();
   });
 }
+
+function enableAll() {
+  document.getElementById("convert-btn").disabled = false;
+  document.getElementsByClassName("track-name-container").forEach(element => {
+    element.childNodes[0].disabled = false;
+  });
+
+  document.getElementsByClassName("dropzone").forEach(element => {
+    Dropzone.forElement(element).enable();
+  });
+}

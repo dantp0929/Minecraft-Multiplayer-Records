@@ -99,11 +99,16 @@ html, body {
 .track-table-headers {
   display: flex;
   align-items: center;
+  width: 75%;
   
   p, input, form {
     flex: 1 1 0;
   }
   
+}
+
+#track-table {
+  width: 75%;
 }
 
 .track-item {
