@@ -97,7 +97,9 @@ Dropzone.options.trackUploader = {
         }
       });
 
-      document.getElementById("convert-btn").disabled = false;
+      var convertBtn = document.getElementById("convert-btn");
+      convertBtn.disabled = false;
+      convertBtn.textContent = "Convert to a Data Pack!";
     });
 
     this.on("removedfile", function(file) {
@@ -128,6 +130,10 @@ if (document.getElementById('track-uploader')) {
 }
 
 window.convert = function() {
+  disableAll();
+  var convertBtn = document.getElementById("convert-btn");
+  convertBtn.textContent = "Converting...";
+
   var ids = [];
   var uuid = document.getElementById("session-uuid").value;
 
@@ -178,7 +184,22 @@ function ajaxConvert(ids, uuid) {
       progress.classList.add("bg-success");
       progress.style.width = "100%";
       progress.textContent = "Completed! Download link will be avaliable for 30 minutes...";
+
+      var convertBtn = document.getElementById("convert-btn");
+      convertBtn.textContent = "Converted!";
+
       document.getElementById("download-section").style.display = "block";
     }
+  });
+}
+
+function disableAll() {
+  document.getElementById("convert-btn").disabled = true;
+  document.getElementsByClassName("track-name-container").forEach(element => {
+    element.childNodes[0].disabled = true;
+  });
+
+  document.getElementsByClassName("dropzone").forEach(element => {
+    Dropzone.forElement(element).disable();
   });
 }

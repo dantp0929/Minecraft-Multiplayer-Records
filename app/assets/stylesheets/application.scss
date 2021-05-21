@@ -115,8 +115,11 @@ html, body {
   }
 
   .dropzone {
-    margin: 0px;
+    margin: 5px;
     border: 1px dashed rgb(120, 150, 173);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
