@@ -1,0 +1,29 @@
+<div class="navbar bg-dark">
+  <div class="nav-items container">
+    <div class="brand" style="display: flex;">
+			<%= image_tag "Music Disk.png", size: "40x40", alt: "" %>
+			<h1>Minecraft Multiplayer Records</h1>
+    </div>
+
+		<div class="nav-links">
+      <a class="nav-link bg-dark" href="/">Home</a>
+      <a class="nav-link bg-dark" href="/about">About</a>
+      <a class="nav-link bg-dark" href="/help">Help</a>
+      <a class="nav-link bg-dark" href="/donate">Donate</a>
+		</div>
+  </div>
+</div>
+
+<div id="wrap">
+  <div id="main" class="container">
+		<p>Hello!</p>
+  </div>
+</div>
+
+<footer class="footer bg-dark">
+  <div class="container">
+    <p>This website is not affiliated with Mojang. Any files uploaded will be deleted from the server 30 minutes after it was uploaded.</p>
+  </div>
+</footer>
+
+<%= javascript_pack_tag "dropzone_controller" %>

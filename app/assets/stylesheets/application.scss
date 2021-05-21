@@ -42,15 +42,25 @@ html, body {
   position: relative;
   clear: both;
   border-radius: 0;
-  display: flex;
-  justify-content: flex-start;
-  align-content: center;
 
   .nav-items {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     padding: 10px;
+  }
+
+  .brand {
+    align-items: center;
+  }
+
+  .nav-links {
+    display: flex;
+    margin-left: 30px;
+
+    .nav-link {
+      font-size: medium;
+    }
   }
 }
 
@@ -76,6 +86,14 @@ html, body {
 .bg-dark {
   background-color: rgb(40, 40, 40);
   color: rgb(245, 245, 245);
+
+  a {
+    color: rgb(212, 212, 212);
+  }
+
+  a:hover {
+    color: rgb(245, 245, 245);
+  }
 }
 
 .track-table-headers {

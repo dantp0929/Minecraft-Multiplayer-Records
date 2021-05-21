@@ -10,4 +10,8 @@ Rails.application.routes.draw do
   post '/track/convert', to: 'track#convert'
   post '/track/download', to: 'track#download'
   post '/track/destroy_many', to: 'track#destroy_many'
+
+  get '/about', to: 'general#about'
+  get '/help', to: 'general#help'
+  get '/donate', to: 'general#donate'
 end
