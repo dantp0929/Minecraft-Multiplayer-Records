@@ -32,6 +32,13 @@
 
     <%= button_tag "Convert to a Resource Pack!", type: 'button', onclick: "convert()", id: "convert-btn", class: 'btn btn-outline-primary btn-sm', disabled: true %>
 
+    <div class="progress">
+      <div id="converting-progress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" 
+      aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+        
+      </div>
+    </div>
+
     <div id="download-section", style="display: none;">
       <%= link_to "Download", track_download_path(uuid: @uuid), method: "post", id: "download-btn", class: 'btn btn-outline-primary btn-lg' %>
     </div>
@@ -40,7 +47,7 @@
 </div>
 <footer class="footer bg-dark">
   <div class="container">
-    <p>This website is not affiliated with Mojang. Any files uploaded will be deleted from the server after the user leaves the website.</p>
+    <p>This website is not affiliated with Mojang. Any files uploaded will be deleted from the server 30 minutes after it was uploaded.</p>
   </div>
 </footer>
 

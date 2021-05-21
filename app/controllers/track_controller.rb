@@ -77,6 +77,8 @@ class TrackController < ApplicationController
     File.delete("tmp/downloads/#{@uuid}/multiplayer_records.zip") if File.exists?("tmp/downloads/#{@uuid}/multiplayer_records.zip")
     zipper = ZipFileGenerator.new("tmp/downloads/#{@uuid}/multiplayer_records", "tmp/downloads/#{@uuid}/multiplayer_records.zip")
     zipper.write
+
+    TracksCleanupJob.set(wait: 30.minute).perform_later(params[:ids], params[:uuid])
     
     render json: { message: 'successfully converted', trackIds: params[:ids], uuid: @uuid }, status: 200
   end
@@ -89,5 +91,4 @@ class TrackController < ApplicationController
   def track_params
     params.require(:track).permit(:name, :texture, :song)
   end
-
 end

@@ -129,7 +129,12 @@ if (document.getElementById('track-uploader')) {
 
 window.convert = function() {
   var ids = [];
-  var uuid = document.getElementById("session-uuid").value
+  var uuid = document.getElementById("session-uuid").value;
+
+  var progress = document.getElementById("converting-progress");
+  progress.setAttribute("aria-valuenow", "33");
+  progress.style.width = "33%";
+  progress.textContent = "Updating track names... 33%";
 
   tracks = document.getElementsByClassName("track-item");
   tracks.forEach(element => {
@@ -140,7 +145,7 @@ window.convert = function() {
       type: "PATCH",
       url: "track/" + element.id.substring(5),
       dataType: 'track[name]',
-      data: { track: {name: element.childNodes[1].value } },
+      data: { track: {name: element.childNodes[1].childNodes[0].value } },
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
@@ -155,6 +160,11 @@ window.convert = function() {
 }
 
 function ajaxConvert(ids, uuid) {
+  var progress = document.getElementById("converting-progress");
+  progress.setAttribute("aria-valuenow", "66");
+  progress.style.width = "66%";
+  progress.textContent = "Converting tracks to mono .ogg format... 66%";
+
   $.ajax({
     type: "POST",
     url: "track/convert",
@@ -164,11 +174,11 @@ function ajaxConvert(ids, uuid) {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
     complete: function(data) {
+      progress.setAttribute("aria-valuenow", "100");
+      progress.classList.add("bg-success");
+      progress.style.width = "100%";
+      progress.textContent = "Completed! Download link will be avaliable for 30 minutes...";
       document.getElementById("download-section").style.display = "block";
     }
   });
 }
-
-$(window).on('unload', function() {
-  var fd = new FormData();
-});

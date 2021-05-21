@@ -111,13 +111,9 @@ html, body {
   color: rgb(120, 150, 173);
 }
 
-.mx {
-  margin-right: 10rem !important;
-  margin-left: 10rem !important;
-}
-
-.btn:disabled {
-  cursor: not-allowed;
+.progress {
+  margin-top: 20px;
+  height: 2rem;
 }
 
 @media (min-width: 992px) {
